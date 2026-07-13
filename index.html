@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firebase 연동 페이지</title>
+</head>
+<body>
+
+    <h1>Firebase가 성공적으로 연결되었습니다!</h1>
+
+    <!-- Firebase App 및 Analytics SDK 로드 (CDN 방식) -->
+    <script type="module">
+        // Firebase 스크립트 가져오기
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
+
+        // 현재 Firebase 콘솔의 프로젝트 설정 정보
+        const firebaseConfig = {
+            apiKey: "AIzaSyAodclIyhRxmBDHkaIObyBdwFq8o5p1-0o",
+            authDomain: "test77-9c357.firebaseapp.com",
+            projectId: "test77-9c357",
+            storageBucket: "test77-9c357.firebasestorage.app",
+            messagingSenderId: "225568257735",
+            appId: "1:225568257735:web:f669ff2cf112c113ddb0e2",
+            measurementId: "G-MY291SBZEG"
+        };
+
+        // Firebase 초기화
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+
+        console.log("Firebase가 성공적으로 초기화되었습니다.", app);
+    </script>
+</body>
+</html>
