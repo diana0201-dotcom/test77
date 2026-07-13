@@ -3,19 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Firebase 연동 페이지</title>
+    <title>Firebase 연동 테스트</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f4f7f6;
+            margin: 0;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        button {
+            background-color: #039be5;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        button:hover {
+            background-color: #0288d1;
+        }
+        #status {
+            margin-top: 15px;
+            font-weight: bold;
+            color: #555;
+        }
+    </style>
 </head>
 <body>
 
-    <h1>Firebase가 성공적으로 연결되었습니다!</h1>
+    <div class="container">
+        <h2>Firebase 연동 완료!</h2>
+        <p>아래 버튼을 눌러 데이터베이스(Firestore) 연동을 테스트해보세요.</p>
+        <button id="btn-save">Firestore에 데이터 전송</button>
+        <div id="status"></div>
+    </div>
 
-    <!-- Firebase App 및 Analytics SDK 로드 (CDN 방식) -->
+    <!-- Firebase SDK 및 연동 스크립트 (모듈 방식) -->
     <script type="module">
-        // Firebase 스크립트 가져오기
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
+        // 1. Firebase 앱 및 필수 서비스(Firestore) CDN 로드
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
 
-        // 현재 Firebase 콘솔의 프로젝트 설정 정보
+        // 2. 제공해주신 Firebase 프로젝트 설정 정보
         const firebaseConfig = {
             apiKey: "AIzaSyAodclIyhRxmBDHkaIObyBdwFq8o5p1-0o",
             authDomain: "test77-9c357.firebaseapp.com",
@@ -26,11 +68,32 @@
             measurementId: "G-MY291SBZEG"
         };
 
-        // Firebase 초기화
+        // 3. Firebase 및 Firestore 초기화
         const app = initializeApp(firebaseConfig);
-        const analytics = getAnalytics(app);
+        const db = getFirestore(app);
 
-        console.log("Firebase가 성공적으로 초기화되었습니다.", app);
+        // 4. 버튼 클릭 시 데이터 저장하는 이벤트 리스너
+        document.getElementById('btn-save').addEventListener('click', async () => {
+            const statusDiv = document.getElementById('status');
+            statusDiv.innerText = "데이터 전송 중...";
+            statusDiv.style.color = "#555";
+
+            try {
+                // 'test_collection'이라는 이름의 컬렉션에 문서 추가
+                const docRef = await addDoc(collection(db, "test_collection"), {
+                    message: "Hello Firebase!",
+                    createdAt: new Date()
+                });
+                
+                statusDiv.innerText = `성공! 문서 ID: ${docRef.id}`;
+                statusDiv.style.color = "green";
+                console.log("Document written with ID: ", docRef.id);
+            } catch (error) {
+                statusDiv.innerText = `오류 발생: ${error.message}`;
+                statusDiv.style.color = "red";
+                console.error("Error adding document: ", error);
+            }
+        });
     </script>
 </body>
 </html>
